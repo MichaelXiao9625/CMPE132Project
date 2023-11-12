@@ -1,20 +1,26 @@
-from app import myapp_obj, db
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, Blueprint, session
 from sqlalchemy.exc import IntegrityError
-from app.models import User
-from app.forms import LoginForm, LogoutForm, SignupForm, SearchForm, SearchResult, ProfileEditForm, Delete_Account_Form
+from .models import User
+from .forms import LoginForm, LogoutForm, SignupForm, SearchForm, SearchResult, ProfileEditForm, Delete_Account_Form
 import re
-
+from app import db
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
 
-@myapp_obj.route('/')   # routes to the base page
+main = Blueprint('main', __name__)
+
+@main.route('/')   # routes to the base page
 def base():
     view = request.args.get('view')  # Get the view parameter from URL
     return render_template("base.html", view=view)
 
-@myapp_obj.route('/login', methods=['POST', 'GET']) #routes to login page
+@main.route('/guest-login')
+def guest_login():
+    session['is_guest'] = True  # Mark the session as guest
+    return redirect(url_for('main.home'))
+
+@main.route('/login', methods=['POST', 'GET']) #routes to login page
 def login():
     current_form = LoginForm()
     errorMessage = ''
@@ -31,14 +37,13 @@ def login():
                 errorMessage = 'Invalid Username or Password'
     return render_template('login.html', form=current_form, error=errorMessage)
 
-@myapp_obj.route('/logout') #logs out and routes to base page
-@login_required
+@main.route('/logout')
 def logout():
-    current_form = LogoutForm()
+    session.pop('is_guest', None)  # Remove guest flag from session
     logout_user()
-    return render_template('base.html', form=current_form)
+    return redirect(url_for('main.base'))
 
-@myapp_obj.route('/delete_account', methods = ['POST', 'GET'])  #deletes account and routes to signup page
+@main.route('/delete_account', methods = ['POST', 'GET'])  #deletes account and routes to signup page
 @login_required
 def delete_account():
 
@@ -53,12 +58,17 @@ def delete_account():
             
     return render_template('delete_account.html', form = current_form)
 
-@myapp_obj.route('/home', methods=['POST', 'GET'])
-@login_required
+@main.route('/home', methods=['POST', 'GET'])
 def home():
-    return render_template('home.html', role=current_user.role)
+    # Check if user is a guest
+    if session.get('is_guest'):
+        return render_template('home.html', role='guest')
+    elif current_user.is_authenticated:
+        return render_template('home.html', role=current_user.role)
+    else:
+        return redirect(url_for('main.login'))
 
-@myapp_obj.route('/signup', methods=['POST', 'GET'])
+@main.route('/signup', methods=['POST', 'GET'])
 def create():
     current_form = SignupForm()
     errorMessage = ''
@@ -91,8 +101,7 @@ def create():
 
     return render_template('signup.html', form=current_form, error=errorMessage)
 
-@myapp_obj.route('/search', methods = ['POST','GET'])   #routes to search page
-@login_required
+@main.route('/search', methods = ['POST','GET'])   #routes to search page
 def search():
     current_form = SearchForm()
     errormessage = ''
@@ -109,12 +118,12 @@ def search():
                 errormessage = 'User not found'  
     return render_template('search.html', error = errormessage)
 
-@myapp_obj.route('/user/<usr>', methods = ['POST','GET'])   #usr url is the searched username
+@main.route('/user/<usr>', methods = ['POST','GET'])   #usr url is the searched username
 def user(usr):
     current_form = SearchResult()
     return render_template('searchResult.html', form=current_form, username=usr)
 
-@myapp_obj.route('/profile')    #routes to current user profile page
+@main.route('/profile')    #routes to current user profile page
 @login_required
 def test12():
     name= current_user.username
@@ -125,7 +134,7 @@ def test12():
     dob = current_user.dob
     return render_template("profile.html", username=name, bio=bio, location=location, email=email, password=password, dob=dob)
 
-@myapp_obj.route('/profile_edit', methods = ['POST','GET']) #routes to profile edit page
+@main.route('/profile_edit', methods = ['POST','GET']) #routes to profile edit page
 @login_required
 def profile_edit():
     current_form = ProfileEditForm()

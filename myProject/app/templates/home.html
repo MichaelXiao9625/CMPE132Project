@@ -130,30 +130,36 @@
             <a class="nav-item nav-link" href="/">View Books</a>
             <a class="nav-item nav-link" href="/">Shop</a>
             <a class="nav-item nav-link" href="/">Help</a>
+        {% elif role == 'guest' %}
+            <!-- Guest-specific links -->
+            <a class="nav-item nav-link" href="/">Search Books</a>
+            <a class="nav-item nav-link" href="/">Help</a>
         {% endif %}
     </div>
 
     <div class="restContent">
-        <center><h1 style="font-size: 50px;">Welcome to Spartan Library</h1>
-        <h2 style="font-size: 40px;">Announcements</h2>
-        <!-- Role-specific content -->
-        {% if role == 'admin' %}
-            <h2>Admin Panel</h2>
-            <!-- Admin-specific buttons and content -->
-        {% elif role == 'librarian' %}
-            <h2>Librarian Panel</h2>
-            <!-- Librarian-specific buttons and content -->
-        {% elif role == 'student' %}
-            <h2>Student Panel</h2>
-            <div class="ribb">
-                <a class="button" href="/">Search for Books</a>
-                <a class="button" href="/">View your Books</a>
-                <a class="button" href="/">Request Books</a>
-            </div>
-        {% endif %}
 
         {% block mycontent %}
-            <!-- Additional content can be placed here -->
+        <center><h1 style="font-size: 50px;">Welcome to the Spartan Library</h1>
+            <h2 style="font-size: 40px;">Announcements</h2>
+            <!-- Role-specific content -->
+            {% if role == 'admin' %}
+                <h2>Admin Panel</h2>
+                <!-- Admin-specific buttons and content -->
+            {% elif role == 'librarian' %}
+                <h2>Librarian Panel</h2>
+                <!-- Librarian-specific buttons and content -->
+            {% elif role == 'student' %}
+                <h2>Student Panel</h2>
+                <div class="ribb">
+                    <a class="button" href="/">Search for Books</a>
+                    <a class="button" href="/">View your Books</a>
+                    <a class="button" href="/">Request Books</a>
+                </div>
+            {% elif role == 'guest' %}
+                <h2>Guest Access</h2>
+                <p>Welcome! Feel free to browse our book catalog.</p>
+            {% endif %}
         {% endblock %}
         </center>
 

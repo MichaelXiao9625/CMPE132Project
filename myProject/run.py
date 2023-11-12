@@ -1,6 +1,6 @@
-from app import myapp_obj
+from app import create_app
 
-myapp_obj.run(debug=True)
+app = create_app()
 
-
-
+if __name__ == '__main__':
+    app.run(debug=True)

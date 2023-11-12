@@ -7,37 +7,39 @@
         body, html {
             margin: 0;
             padding: 0;
-            height: 100%;
+            height: 100%; /* Ensures the body takes the full viewport height */
             font-family: 'Cambria', sans-serif;
         }
 
         .navbar {
             background-color: #009933;
-            padding: 15px 20px; /* Increased padding */
+            padding: 15px 20px;
             color: white;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 30px; /* Fixed height for navbar */
         }
 
         .navbar a {
             color: white;
             text-decoration: none;
-            padding: 10px 20px; /* Larger buttons */
+            padding: 10px 20px;
             border-radius: 5px;
             transition: background-color 0.3s;
-            font-weight: bold; /* Make text bold */
-            background-color: #007321; /* Button background color */
+            font-weight: bold;
+            background-color: #007321;
         }
 
         .navbar a:hover {
-            background-color: #005a1e; /* Darker shade on hover */
+            background-color: #005a1e;
         }
 
         /* Split screen styling */
         .split-screen {
             display: flex;
-            height: calc(100vh - 60px); /* Viewport height minus navbar height */
+            height: calc(100vh - 60px); /* Full viewport height minus navbar height */
+            overflow: hidden; /* Hide overflow to prevent scrolling */
         }
 
         .left-half {
@@ -53,12 +55,12 @@
         .right-half {
             flex: 0 1 65%;
             background: url('/static/images/sjsuLib.png') no-repeat center center;
-            background-size: cover;
+            background-size: cover; /* Cover might crop the image to fit */
         }
 
         /* Center content styling */
         .center-content h1, .center-content h2, .center-content h3 {
-            color: #333; /* Dark gray for better readability */
+            color: #333;
         }
 
         .center-content h1 {
@@ -85,7 +87,7 @@
             .left-half, .right-half {
                 flex: none;
                 width: 100%;
-                height: 300px;
+                height: 300px; /* Fixed height for smaller screens */
             }
         }
     </style>
@@ -103,6 +105,7 @@
         <div class="left-half">
             <div class="center-content">
                 <center>{% block mycontent %}
+                    <h1 style="font-size: 50px;">Welcome to the Spartan Library</h1>
                     <h1>CMPE 132 Section 1</h1>
                     <h2>Created and designed by</h2>
                     <h3>Michael Xiao</h3>

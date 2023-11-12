@@ -15,6 +15,10 @@ class User(db.Model, UserMixin):
     dob = db.Column(db.String)
     location = db.Column(db.String) 
 
+class GuestUser(UserMixin):
+    def __init__(self):
+        self.id = 0  # Assign a unique identifier for the guest user
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))

@@ -1,25 +1,30 @@
+# __init__.py
 from flask import Flask
-import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from flask_migrate import Migrate  # Import Flask-Migrate
+from flask_migrate import Migrate
+import os
 
-myapp_obj = Flask(__name__)
+db = SQLAlchemy()
+login = LoginManager()
 
-basedir = os.path.abspath(os.path.dirname(__file__))
+def create_app():
+    app = Flask(__name__)
+    basedir = os.path.abspath(os.path.dirname(__file__))
 
-myapp_obj.config.update(
-    SECRET_KEY='secret',
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db'),
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-)
-db = SQLAlchemy(myapp_obj)
+    app.config.update(
+        SECRET_KEY='secret',
+        SQLALCHEMY_DATABASE_URI='sqlite:///' + os.path.join(basedir, 'app.db'),
+        SQLALCHEMY_TRACK_MODIFICATIONS=False
+    )
 
-# Initialize Flask-Migrate
-migrate = Migrate(myapp_obj, db)
+    db.init_app(app)
+    login.init_app(app)
+    Migrate(app, db)
 
-login = LoginManager(myapp_obj)
+    login.login_view = 'main.login'  # Updated to use Blueprint
 
-login.login_view = 'login'
+    from .routes import main as main_routes
+    app.register_blueprint(main_routes)
 
-from app import routes, models
+    return app
