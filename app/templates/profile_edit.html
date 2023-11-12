@@ -1,0 +1,18 @@
+{% extends "home.html" %}
+
+{% block mycontent %}
+
+<center>
+    <h1>Profile Editor</h1>
+
+    <form action = "" method = "POST" novalidate>
+        {{form.hidden_tag()}}
+        
+        <p>{{form.bio.label}} <br> {{form.bio()}}</p>
+        <p>{{form.dob.label}} <br> {{form.dob()}}</p>
+        <p>{{form.location.label}} <br> {{form.location()}}</p>
+        <p>{{form.submit()}}</p>
+    </form>
+</center>
+
+{% endblock %}

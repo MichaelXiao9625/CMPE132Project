@@ -1,0 +1,30 @@
+{% extends "home.html" %}
+
+{% block mycontent %}
+<center>
+    <Title>Profile</Title>
+<div>
+<h1 class="title">
+Welcome, {{username}}!
+</h1>
+</div>
+</center>
+<center>
+    <h1><h3>Bio:</h3>{{bio}}</h1>
+    <h1><h3>Date of Birth:</h3>{{dob}}</h1>
+    <h1><h3>Location:</h3> {{location}}</h1>
+
+
+    <h1><h3>Username:</h3>{{username}}</h1>
+    <h1><h3>Email:</h3> {{email}}</h1>
+
+</center>
+<center>
+<div class="ribb">
+
+    <a class="button" href="/profile_edit">Edit Profile</a><br>
+    <a class="button" href="/delete_account">DELETE ACCOUNT</a>
+
+</div>
+</center>
+{% endblock %}

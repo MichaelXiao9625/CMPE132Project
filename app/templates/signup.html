@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block mycontent %}
+<center>
+    <h1>Create your account here</h1>
+
+    <form action="" method="POST" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.first.label }} <br>
+            <input type="text" name="{{ form.first.name }}" style="width: 100%; padding: 10px; margin: 5px 0 22px 0; border: 1px solid #ccc; background: white;">
+        </p>
+        <p>
+            {{ form.last.label }} <br>
+            <input type="text" name="{{ form.last.name }}" style="width: 100%; padding: 10px; margin: 5px 0 22px 0; border: 1px solid #ccc; background: white;">
+        </p>
+        <p>
+            {{ form.username.label }} <br>
+            <input type="text" name="{{ form.username.name }}" style="width: 100%; padding: 10px; margin: 5px 0 22px 0; border: 1px solid #ccc; background: white;">
+        </p>
+        <p>
+            {{ form.password.label }} <br>
+            <input type="password" name="{{ form.password.name }}" style="width: 100%; padding: 10px; margin: 5px 0 22px 0; border: 1px solid #ccc; background: white;">
+        </p>
+        <p>
+            {{ form.confirm_password.label }} <br>
+            <input type="password" name="{{ form.confirm_password.name }}" style="width: 100%; padding: 10px; margin: 5px 0 22px 0; border: 1px solid #ccc; background: white;">
+        </p>
+        <p>
+            {{ form.email.label }} <br>
+            <input type="email" name="{{ form.email.name }}" style="width: 100%; padding: 10px; margin: 5px 0 22px 0; border: 1px solid #ccc; background: white;">
+        </p>
+        <p>{{ form.role.label }}</p>
+        <div style="display: flex; justify-content: center; align-items: center;">
+            {% for subfield in form.role %}
+                <div style="margin-right: 20px; display: flex; align-items: center;">
+                    {{ subfield }} {{ subfield.label }}
+                </div>
+            {% endfor %}
+        </div>
+        <p>
+            <button type="submit" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Sign Up</button>
+        </p>
+    </form>
+    {% if error %}
+        <h4 style="color: red;">{{ error }}</h4>
+    {% endif %}
+    <h5>You will be redirected to the login page when complete</h5>
+</center>
+{% endblock %}

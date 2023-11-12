@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Home Page</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Cambria', sans-serif;
+            background-color: #efefef;
+            height: 100%;
+            overflow: hidden; /* Prevents scrolling */
+        }
+
+        .navbar {
+            background: linear-gradient(to bottom, #00cc00 0%, #009933 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 15px 20px;
+            box-sizing: border-box; /* Includes padding in height calculation */
+            z-index: 2;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            background-color: #007321;
+        }
+
+        .navbar a:hover {
+            background-color: #005a1e;
+        }
+
+        .sidebar {
+            height: calc(100% - 60px); /* Adjust height to account for navbar */
+            width: 165px;
+            position: fixed;
+            z-index: 1;
+            top: 85px; /* Start below the navbar */
+            bottom: 0;
+            left: 0;
+            background-color: black;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: floralwhite;
+            display: block;
+        }
+
+        .sidebar a:hover {
+            color: greenyellow;
+        }
+
+        .restContent {
+            margin-left: 165px;
+            padding: 20px;
+            margin-top: 60px; /* Same as navbar height */
+        }
+
+        .ribb {
+            width: 600px;
+            padding: 5px;
+            display: flex;
+            justify-content: space-between;
+            margin: 1.2em auto;
+            background-color: gold;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #ffffff;
+            background-color: darkred;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        @media screen and (max-height: 450px){
+            .sidebar {padding-top: 15px;}
+            .sidebar a {font-size: 15px;}
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div><h2>Spartan Library</div></h2>
+        <div>
+            <a href="/home">Home</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <!-- Sidebar links based on user role -->
+        {% if role == 'admin' %}
+            <!-- Admin-specific links -->
+            <a class="nav-item nav-link" href="/profile">Profile</a>
+            <a class="nav-item nav-link" href="/">Admin Dashboard</a>
+            <a class="nav-item nav-link" href="/">System Settings</a>
+            <a class="nav-item nav-link" href="/">Manage Users</a>
+            <a class="nav-item nav-link" href="/">Database</a>
+            <a class="nav-item nav-link" href="/">Book Inventory</a>
+            <a class="nav-item nav-link" href="/">Audit Logs</a>
+        {% elif role == 'librarian' %}
+            <!-- Librarian-specific links -->
+            <a class="nav-item nav-link" href="/profile">Profile</a>
+            <a class="nav-item nav-link" href="/">Book Inventory</a>
+            <a class="nav-item nav-link" href="/">Manage Shop</a>
+            <a class="nav-item nav-link" href="/">View Purchaces</a>
+        {% elif role == 'student' %}
+            <!-- Student-specific links -->
+            <a class="nav-item nav-link" href="/profile">Profile</a>
+            <a class="nav-item nav-link" href="/search">Search Books</a>
+            <a class="nav-item nav-link" href="/">View Books</a>
+            <a class="nav-item nav-link" href="/">Shop</a>
+            <a class="nav-item nav-link" href="/">Help</a>
+        {% endif %}
+    </div>
+
+    <div class="restContent">
+        <center><h1 style="font-size: 50px;">Welcome to Spartan Library</h1>
+        <h2 style="font-size: 40px;">Announcements</h2>
+        <!-- Role-specific content -->
+        {% if role == 'admin' %}
+            <h2>Admin Panel</h2>
+            <!-- Admin-specific buttons and content -->
+        {% elif role == 'librarian' %}
+            <h2>Librarian Panel</h2>
+            <!-- Librarian-specific buttons and content -->
+        {% elif role == 'student' %}
+            <h2>Student Panel</h2>
+            <div class="ribb">
+                <a class="button" href="/">Search for Books</a>
+                <a class="button" href="/">View your Books</a>
+                <a class="button" href="/">Request Books</a>
+            </div>
+        {% endif %}
+
+        {% block mycontent %}
+            <!-- Additional content can be placed here -->
+        {% endblock %}
+        </center>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>

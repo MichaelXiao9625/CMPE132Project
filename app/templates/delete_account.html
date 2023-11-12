@@ -1,0 +1,21 @@
+
+{% extends "home.html" %}
+
+{% block mycontent %}
+
+<center>
+    <Title>Delete Account</Title>
+<div>
+<h1 class="title">
+Are you sure you want to delete your account?
+</h1>
+<h2>Please enter your password to confirm.</h2>
+<form action="" method="POST" novalidate>
+    {{form.hidden_tag()}}
+    <p>{{form.password.label}} <br> {{form.password()}}</p>
+    <p>{{form.submit()}}</p>
+</form>
+<h5>You will be redirected to the home page when complete.</h5>
+{{error}}
+</center>
+{% endblock %}

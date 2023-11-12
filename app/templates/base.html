@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Welcome to Spartan Library</title>
+    <style>
+        /* General styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Cambria', sans-serif;
+        }
+
+        .navbar {
+            background-color: #009933;
+            padding: 15px 20px; /* Increased padding */
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px; /* Larger buttons */
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-weight: bold; /* Make text bold */
+            background-color: #007321; /* Button background color */
+        }
+
+        .navbar a:hover {
+            background-color: #005a1e; /* Darker shade on hover */
+        }
+
+        /* Split screen styling */
+        .split-screen {
+            display: flex;
+            height: calc(100vh - 60px); /* Viewport height minus navbar height */
+        }
+
+        .left-half {
+            flex: 0 1 35%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .right-half {
+            flex: 0 1 65%;
+            background: url('/static/images/sjsuLib.png') no-repeat center center;
+            background-size: cover;
+        }
+
+        /* Center content styling */
+        .center-content h1, .center-content h2, .center-content h3 {
+            color: #333; /* Dark gray for better readability */
+        }
+
+        .center-content h1 {
+            font-size: 2.5em;
+            color: #009933;
+        }
+
+        .center-content h2 {
+            font-size: 1.8em;
+            color: #006622;
+        }
+
+        .center-content h3 {
+            font-size: 1.4em;
+            font-style: italic;
+        }
+
+        /* Responsive adjustments */
+        @media screen and (max-width: 768px) {
+            .split-screen {
+                flex-direction: column;
+                height: auto;
+            }
+            .left-half, .right-half {
+                flex: none;
+                width: 100%;
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div>Welcome to the Spartan Library</div>
+        <div>
+            <a href="/login">Login</a>
+            <a href="/signup">Sign Up</a>            
+        </div>
+    </div>
+    
+    <div class="split-screen">
+        <div class="left-half">
+            <div class="center-content">
+                <center>{% block mycontent %}
+                    <h1>CMPE 132 Section 1</h1>
+                    <h2>Created and designed by</h2>
+                    <h3>Michael Xiao</h3>
+                {% endblock %}</center>
+            </div>
+        </div>
+        <div class="right-half"></div>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>
