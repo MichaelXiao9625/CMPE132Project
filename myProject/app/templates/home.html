@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>Home Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
         body, html {
             margin: 0;
@@ -9,7 +9,7 @@
             font-family: 'Cambria', sans-serif;
             background-color: #efefef;
             height: 100%;
-            overflow: hidden; /* Prevents scrolling */
+            overflow: auto; 
         }
 
         .navbar {
@@ -45,7 +45,7 @@
             width: 165px;
             position: fixed;
             z-index: 1;
-            top: 85px; /* Start below the navbar */
+            top: 75px; /* Start below the navbar */
             bottom: 0;
             left: 0;
             background-color: black;
@@ -91,6 +91,32 @@
             outline: none;
         }
 
+        .announcements-section {
+            margin: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        .announcement {
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        .announcement:last-child {
+            border-bottom: none;
+        }
+
+        .announcement small {
+            display: block;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .add-announcement-btn {
+            margin-top: 20px; /* Adjust this value as needed */
+        }
+
         @media screen and (max-height: 450px){
             .sidebar {padding-top: 15px;}
             .sidebar a {font-size: 15px;}
@@ -99,7 +125,7 @@
 </head>
 <body>
     <div class="navbar">
-        <div><h2>Spartan Library</div></h2>
+        <div><h2>Spartan Library</h2></div>
         <div>
             <a href="/home">Home</a>
             <a href="/logout">Logout</a>
@@ -111,67 +137,131 @@
         {% if role == 'admin' %}
             <!-- Admin-specific links -->
             <a class="nav-item nav-link" href="/profile">Profile</a>
-            <a class="nav-item nav-link" href="/">Admin Dashboard</a>
-            <a class="nav-item nav-link" href="/">System Settings</a>
-            <a class="nav-item nav-link" href="/">Manage Users</a>
-            <a class="nav-item nav-link" href="/">Database</a>
-            <a class="nav-item nav-link" href="/">Book Inventory</a>
-            <a class="nav-item nav-link" href="/">Audit Logs</a>
+            <a class="nav-item nav-link" href="/manage_users">Manage Users</a>
+            <a class="nav-item nav-link" href="/book_inventory">Book Inventory</a>
         {% elif role == 'librarian' %}
             <!-- Librarian-specific links -->
             <a class="nav-item nav-link" href="/profile">Profile</a>
-            <a class="nav-item nav-link" href="/">Book Inventory</a>
-            <a class="nav-item nav-link" href="/">Manage Shop</a>
-            <a class="nav-item nav-link" href="/">View Purchaces</a>
+            <a class="nav-item nav-link" href="/manage_users">Manage Users</a>
+            <a class="nav-item nav-link" href="/book_inventory">Book Inventory</a>
         {% elif role == 'student' %}
             <!-- Student-specific links -->
             <a class="nav-item nav-link" href="/profile">Profile</a>
-            <a class="nav-item nav-link" href="/search">Search Books</a>
-            <a class="nav-item nav-link" href="/">View Books</a>
-            <a class="nav-item nav-link" href="/">Shop</a>
-            <a class="nav-item nav-link" href="/">Help</a>
+            <a class="nav-item nav-link" href="/book_inventory">Browse Books</a>
+            <a class="nav-item nav-link" href="/my_books">My Books</a>
+            <a class="nav-item nav-link" href="/help">Help</a>
         {% elif role == 'guest' %}
             <!-- Guest-specific links -->
-            <a class="nav-item nav-link" href="/">Search Books</a>
-            <a class="nav-item nav-link" href="/">Help</a>
+            <a class="nav-item nav-link" href="/book_inventory">Browse Books</a>
+            <a class="nav-item nav-link" href="/help">Help</a>
         {% endif %}
     </div>
 
+    <!-- Main Content -->
     <div class="restContent">
-
         {% block mycontent %}
-        <center><h1 style="font-size: 50px;">Welcome to the Spartan Library</h1>
-            <h2 style="font-size: 40px;">Announcements</h2>
-            <!-- Role-specific content -->
-            {% if role == 'admin' %}
-                <h2>Admin Panel</h2>
-                <!-- Admin-specific buttons and content -->
-            {% elif role == 'librarian' %}
-                <h2>Librarian Panel</h2>
-                <!-- Librarian-specific buttons and content -->
-            {% elif role == 'student' %}
-                <h2>Student Panel</h2>
-                <div class="ribb">
-                    <a class="button" href="/">Search for Books</a>
-                    <a class="button" href="/">View your Books</a>
-                    <a class="button" href="/">Request Books</a>
-                </div>
-            {% elif role == 'guest' %}
-                <h2>Guest Access</h2>
-                <p>Welcome! Feel free to browse our book catalog.</p>
-            {% endif %}
-        {% endblock %}
-        </center>
+        <center>
+            <h1>Welcome to the Spartan Library</h1>
+            <h2>Announcements</h2>
 
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
+            <!-- Announcements Section -->
+            <div class="announcements-section">
+                {% for announcement in announcements %}
+                    <div class="announcement">
+                        <p>{{ announcement.content }}</p>
+                        <small>Posted on: {{ announcement.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                        {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                            <!-- Edit and Delete Buttons -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editAnnouncementModal-{{ announcement.id }}">Edit</button>
+                            <form method="POST" action="{{ url_for('main.delete_announcement', id=announcement.id) }}" style="display: inline-block;">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+
+                            <!-- Edit Modal -->
+                            <div class="modal fade" id="editAnnouncementModal-{{ announcement.id }}" tabindex="-1" role="dialog" aria-labelledby="editAnnouncementModalLabel-{{ announcement.id }}" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editAnnouncementModalLabel-{{ announcement.id }}">Edit Announcement</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Edit Announcement Form -->
+                                            <form action="{{ url_for('main.edit_announcement', id=announcement.id) }}" method="post">
+                                                {{ form.hidden_tag() }}
+                                                <div class="form-group">
+                                                    {{ form.content.label(class_='form-control-label') }}
+                                                    <textarea class="form-control" id="announcementContent-{{ announcement.id }}" name="content" rows="3">{{ announcement.content }}</textarea>
+                                                    {% if form.content.errors %}
+                                                        <div class="invalid-feedback">
+                                                            {{ form.content.errors[0] }}
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Update Announcement</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <p>No announcements at the moment.</p>
                 {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
+                <!-- Add Announcement Button for Admin -->
+                {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                <button type="button" class="btn btn-primary add-announcement-btn" data-toggle="modal" data-target="#addAnnouncementModal">Add Announcement</button>
+                    <!-- Add Announcement Modal -->
+                    <div class="modal fade" id="addAnnouncementModal" tabindex="-1" role="dialog" aria-labelledby="addAnnouncementModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addAnnouncementModalLabel">New Announcement</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{ url_for('main.create_announcement') }}" method="post">
+                                        {{ form.hidden_tag() }}
+                                        <div class="form-group">
+                                            {{ form.content.label(class_='form-control-label') }}
+                                            {{ form.content(class_='form-control') }}
+                                            {% if form.content.errors %}
+                                                <div class="invalid-feedback">
+                                                    {{ form.content.errors[0] }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Post Announcement</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </center>
+        {% endblock %}
     </div>
+
+    <!-- Bootstrap and JavaScript for modal functionality and populating edit form -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        function populateEditForm(content, id) {
+            document.getElementById('announcementContent-' + id).value = content;
+        }
+    </script>
 </body>
 </html>

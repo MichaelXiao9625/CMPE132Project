@@ -1,18 +1,68 @@
 {% extends "home.html" %}
 
 {% block mycontent %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="text-center mb-4">Profile Editor</h1>
+            <form action="" method="POST" novalidate>
+                {{ form.hidden_tag() }}
 
-<center>
-    <h1>Profile Editor</h1>
+                <div class="form-group">
+                    {{ form.bio.label(class="form-label") }}
+                    {{ form.bio(class="form-control", rows=6) }}
+                    {% if form.bio.errors %}
+                        <div class="alert alert-danger">
+                            {{ form.bio.errors[0] }}
+                        </div>
+                    {% endif %}
+                </div>
 
-    <form action = "" method = "POST" novalidate>
-        {{form.hidden_tag()}}
-        
-        <p>{{form.bio.label}} <br> {{form.bio()}}</p>
-        <p>{{form.dob.label}} <br> {{form.dob()}}</p>
-        <p>{{form.location.label}} <br> {{form.location()}}</p>
-        <p>{{form.submit()}}</p>
-    </form>
-</center>
+                <div class="form-group">
+                    <label class="form-label">Date of Birth</label>
+                    <div class="form-row">
+                        <div class="col">
+                            <select class="form-control" name="dob_month">
+                                <option value="">Month</option>
+                                {% for month in ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] %}
+                                    <option value="{{ loop.index }}">{{ month }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col">
+                            <select class="form-control" name="dob_day">
+                                <option value="">Day</option>
+                                {% for day in range(1, 32) %}
+                                    <option value="{{ day }}">{{ day }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col">
+                            <select class="form-control" name="dob_year">
+                                <option value="">Year</option>
+                                {% for year in range(1950, 2051) %}
+                                    <option value="{{ year }}">{{ year }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="form-group">
+                    {{ form.location.label(class="form-label") }}
+                    {{ form.location(class="form-control") }}
+                    {% if form.location.errors %}
+                        <div class="alert alert-danger">
+                            {{ form.location.errors[0] }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group text-center">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

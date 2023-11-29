@@ -1,0 +1,47 @@
+{% extends "home.html" %}
+
+{% block mycontent %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <h1 class="mb-4">My Books</h1>
+            {% for book in checked_out_books %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Author</th>
+                            <th scope="col">Return Book</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td>{{ book.title }}</td>
+                            <td>{{ book.author }}</td>
+                            <td>
+                                <form action="{{ url_for('main.return_book', book_id=book.id, return_page='my_books') }}" method="post">
+                                    <button type="submit" class="btn btn-warning btn-sm">Return</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">You currently have no books checked out. Go check out some books!</td>
+                            </tr>
+            {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <center>
+            <p></p>
+            {% if request.args.get('error') %}
+            <div class="alert alert-success">{{ request.args.get('error') }}</div>
+            {% endif %}
+        </center>
+    </div>
+</div>
+{% endblock %}

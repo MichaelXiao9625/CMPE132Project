@@ -1,30 +1,29 @@
 {% extends "home.html" %}
 
 {% block mycontent %}
-<center>
-    <Title>Profile</Title>
-<div>
-<h1 class="title">
-Welcome, {{username}}!
-</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h1 class="card-title text-center">Welcome, {{ username }}!</h1>
+                </div>
+                <div class="card-body">    
+                    <div class="mt-4">
+                        <p><strong>Username:</strong> {{ username }}</p>
+                        <p><strong>Email:</strong> {{ email }}</p>
+                        <p><strong>Role:</strong> {{ role }}</p>
+                        <p><strong>Date of Birth:</strong> {{ dob or "Not provided" }}</p>
+                        <p><strong>Location:</strong> {{ location or "Not provided" }}</p>
+                        <p><strong>Bio:</strong> {{ bio or "Not provided" }}</p>
+                    </div>
+                    <div class="text-center mt-4">
+                        <a href="/profile_edit" class="btn btn-primary">Edit Profile</a>
+                        <a href="/delete_account" class="btn btn-danger">Delete Account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-</center>
-<center>
-    <h1><h3>Bio:</h3>{{bio}}</h1>
-    <h1><h3>Date of Birth:</h3>{{dob}}</h1>
-    <h1><h3>Location:</h3> {{location}}</h1>
-
-
-    <h1><h3>Username:</h3>{{username}}</h1>
-    <h1><h3>Email:</h3> {{email}}</h1>
-
-</center>
-<center>
-<div class="ribb">
-
-    <a class="button" href="/profile_edit">Edit Profile</a><br>
-    <a class="button" href="/delete_account">DELETE ACCOUNT</a>
-
-</div>
-</center>
 {% endblock %}

@@ -1,21 +1,39 @@
-
 {% extends "home.html" %}
 
 {% block mycontent %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="delete-account-section p-4 text-center">
+                <h1 class="mb-4">Delete Account</h1>
+                <h2 class="mb-4">Are you sure you want to delete your account?</h2>
+                <p class="mb-4">Please enter your password to confirm.</p>
+                
+                {% if error %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endif %}
 
-<center>
-    <Title>Delete Account</Title>
-<div>
-<h1 class="title">
-Are you sure you want to delete your account?
-</h1>
-<h2>Please enter your password to confirm.</h2>
-<form action="" method="POST" novalidate>
-    {{form.hidden_tag()}}
-    <p>{{form.password.label}} <br> {{form.password()}}</p>
-    <p>{{form.submit()}}</p>
-</form>
-<h5>You will be redirected to the home page when complete.</h5>
-{{error}}
-</center>
+                <form action="" method="POST" novalidate class="mb-4">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.password.label(class="form-control-label") }}
+                        {{ form.password(class="form-control") }}
+                    </div>
+                    <button type="submit" class="btn btn-danger">Delete Account</button>
+                </form>
+                <h5>You will be redirected to the home page when complete.</h5>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
+
+<style>
+.delete-account-section {
+    border: 1px solid #dc3545; 
+    border-radius: 5px;
+    background-color: #fff;
+}
+</style>

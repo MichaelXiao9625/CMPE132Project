@@ -1,0 +1,54 @@
+{% extends "home.html" %}
+
+{% block mycontent %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h1 class="card-title text-center">Welcome, {{ user.username }}!</h1>
+                </div>
+                <div class="card-body">    
+                    <div class="mt-4">
+                        <p><strong>Username:</strong> {{ user.username }}</p>
+                        <p><strong>Email:</strong> {{ user.email }}</p>
+                        <p><strong>Role:</strong> {{ user.role }}</p>
+                        <p><strong>Date of Birth:</strong> {{ user.dob or "Not provided" }}</p>
+                        <p><strong>Location:</strong> {{ user.location or "Not provided" }}</p>
+                        <p><strong>Bio:</strong> {{ user.bio or "Not provided" }}</p>
+                    </div>
+
+                    <!-- Section for checked-out books, visible only for student profiles -->
+                    {% if user.role == 'student' %}
+                        <div class="mt-5">
+                            <h3>Checked Out Books</h3>
+                            {% if checked_out_books %}
+                                <table class="table table-striped mt-3">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Title</th>
+                                            <th>Author</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for book in checked_out_books %}
+                                            <tr>
+                                                <th scope="row">{{ loop.index }}</th>
+                                                <td>{{ book.title }}</td>
+                                                <td>{{ book.author }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <p class="mt-3">No books checked out.</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
