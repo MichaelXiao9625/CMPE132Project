@@ -23,6 +23,7 @@
 - flask-wtf
 - flask-login
 - flask-sqlalchemy
+- flask-migrate
 
 ## Features
 - Custom account creation

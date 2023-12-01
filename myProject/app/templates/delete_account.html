@@ -8,13 +8,6 @@
                 <h1 class="mb-4">Delete Account</h1>
                 <h2 class="mb-4">Are you sure you want to delete your account?</h2>
                 <p class="mb-4">Please enter your password to confirm.</p>
-                
-                {% if error %}
-                    <div class="alert alert-danger" role="alert">
-                        {{ error }}
-                    </div>
-                {% endif %}
-
                 <form action="" method="POST" novalidate class="mb-4">
                     {{ form.hidden_tag() }}
                     <div class="form-group">
@@ -23,6 +16,11 @@
                     </div>
                     <button type="submit" class="btn btn-danger">Delete Account</button>
                 </form>
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endif %}
                 <h5>You will be redirected to the home page when complete.</h5>
             </div>
         </div>

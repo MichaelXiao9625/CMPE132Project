@@ -53,20 +53,28 @@ def logout():
     logout_user()
     return response
 
-@main.route('/delete_account', methods = ['POST', 'GET'])  #deletes account and routes to signup page
+@main.route('/delete_account', methods=['POST', 'GET'])
 @login_required
 def delete_account():
-
     current_form = Delete_Account_Form()
     user = User.query.filter_by(username=current_user.username).first()
 
-    if current_form.validate_on_submit() and check_password_hash(user.password,current_form.password.data): #checking if password is correct
-                    
-        db.session.delete(user) #deleting user
+    if current_form.validate_on_submit() and check_password_hash(user.password, current_form.password.data):
+        # Return all checked-out books to stock
+        for book in user.books_checked_out:
+            book.available_copies += 1  # Increase the available copies count
+        # Clear the user's checked-out books list
+        user.books_checked_out = []
+
+        # Delete user
+        db.session.delete(user)
         db.session.commit()
-        return redirect('/signup')
-            
-    return render_template('delete_account.html', form = current_form, role=current_user.role)
+        return redirect('/')
+    elif current_form.is_submitted():
+        errorMessage = 'Incorrect password'
+        return render_template('delete_account.html', form=current_form, error=errorMessage, role=current_user.role)
+
+    return render_template('delete_account.html', form=current_form, role=current_user.role)
 
 @main.route('/home', methods=['POST', 'GET'])
 def home():
@@ -175,6 +183,13 @@ from sqlalchemy import case
 @main.route('/manage_users')
 @login_required
 def manage_users():
+    # Determine the role of the current user, default to 'guest' if not logged in
+    role = current_user.role if current_user.is_authenticated else 'guest'
+
+    # Redirect students and guests if they try to access this page through URL
+    if current_user.is_authenticated and role not in ['admin', 'librarian']:
+        return redirect(url_for('main.home'))
+
     # Retrieve all non-guest users
     users = User.query.filter(User.role != 'guest').all()
 

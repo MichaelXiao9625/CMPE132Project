@@ -12,9 +12,15 @@
                 <div class="card-body">
                     <p>Welcome to the Spartan Library platform! This guide will help you understand how to navigate our site and make the most of our resources.</p>
                     <ul>
+                        {% if current_user.role == 'student' %}
                         <li><strong>Navigating the Site:</strong> Use the side navigation bar to access different sections of the library, such as book inventory, your checked-out books, and your profile.</li>
                         <li><strong>Checking Out Books:</strong> To check out a book, go to the 'Book Inventory' page, select a book, and click on 'Check Out' if it's available.</li>
                         <li><strong>Returning Books:</strong> To return a book, go to 'My Books' or 'Browse Books' and click on 'Return' next to the book you wish to return.</li>
+                        {% else %}
+                        <li><strong>Navigating the Site:</strong> Use the side navigation bar to access our book inventory.</li>
+                        <li><strong>Browsing Inventory:</strong> Here you can view what books we have in stock.</li>
+                        <li><strong>Checking Out and Returning Books:</strong> Please create an account to access this privledge.</li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
@@ -23,10 +29,9 @@
                     <h2 class="card-title">About Our Library</h2>
                 </div>
                 <div class="card-body">
-                    <p>Our library is dedicated to providing students and guests with a wide range of books across different genres and subjects. We aim to support learning and development through reading.</p>
+                    <p>Our library is dedicated to providing students with a wide range of books across different genres and subjects. We aim to support learning and development through reading.</p>
                     <ul>
                         <li><strong>Vast Collection:</strong> We offer a variety of books, from academic texts to fiction and non-fiction.</li>
-                        <li><strong>Community Engagement:</strong> Our library is a community space for learning, discussion, and sharing ideas.</li>
                     </ul>
                 </div>
             </div>
